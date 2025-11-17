@@ -1,0 +1,81 @@
+import pandas as pd
+
+data = {
+
+    'Candidate_ID': range(1, 21),
+
+    'Gender': ['Male', 'Female', 'Male', 'Female', 'Male', 
+
+               'Female', 'Male', 'Female', 'Male', 'Female',
+
+               'Male', 'Female', 'Male', 'Female', 'Male',
+
+               'Female', 'Male', 'Female', 'Male', 'Female'],
+
+    'Selected': [1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 
+
+                 1, 0, 0, 1, 1, 0, 1, 0, 1, 0]
+
+}
+
+df = pd.DataFrame(data)
+
+print("=== Sample Hiring Data ===")
+
+display(df)
+
+selection_rates = df.groupby('Gender')['Selected'].mean() * 100
+
+print("\n=== Selection Rates by Gender ===")
+
+display(selection_rates)
+
+threshold = 5
+
+bias_gap = abs(selection_rates['Male'] - selection_rates['Female'])
+
+if bias_gap > threshold:
+
+    bias_detected = True
+
+    print(f"\n  Potential Gender Bias Detected! Difference = {bias_gap:.2f}%")
+
+else:
+
+    bias_detected = False
+
+    print(f"\n  No significant gender bias detected. Difference = {bias_gap:.2f}%")
+
+if bias_detected:
+
+    print("\n=== Suggested Mitigation Strategies ===")
+
+    print("1 ⃣ Review hiring criteria to ensure equal opportunity.")
+
+    print("2 ⃣ Use blind recruitment (remove gender identifiers).")
+
+    print("3 ⃣ Rebalance dataset before training AI models.")
+
+    print("4 ⃣ Monitor model predictions for bias post-deployment.")
+
+else:
+
+    print("\n  Current data shows fair selection across genders.")
+
+report = {
+
+    "Male Selection Rate (%)": round(selection_rates['Male'], 2),
+
+    "Female Selection Rate (%)": round(selection_rates['Female'], 2),
+
+    "Bias Gap (%)": round(bias_gap, 2),
+
+    "Bias Detected": bias_detected
+
+}
+
+report_df = pd.DataFrame([report])
+
+print("\n=== Fairness Report ===")
+
+display(report_df)
