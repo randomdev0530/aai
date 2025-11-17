@@ -1,0 +1,85 @@
+class CustomerDataAgent:
+
+    def __init__(self, customer):
+
+        self.customer = customer
+
+        self.actions = []
+
+    def validate_email(self):
+
+        email = self.customer.get("email", "")
+
+        if "@" not in email or "." not in email:
+
+            self.actions.append("Invalid email. Suggest correction: add '@domain.com'")
+
+            return False
+
+        return True
+
+    def validate_age(self):
+
+        age = self.customer.get("age")
+
+        if not (18 <= age <= 100):
+
+            self.actions.append(f"Age {age} seems unusual. Ask for confirmation.")
+
+            return False
+
+        return True
+
+    def validate_consent(self):
+
+        consent = str(self.customer.get("consent", "")).lower()
+
+        if consent not in ["yes", "true", "1"]:
+
+            self.actions.append("Consent not given. Escalate to compliance team.")
+
+            return False
+
+        return True
+
+    def run(self):
+
+        print("🤖 Agent starting customer data validation...\n")
+
+        email_ok = self.validate_email()
+
+        age_ok = self.validate_age()
+
+        consent_ok = self.validate_consent()
+
+        if all([email_ok, age_ok, consent_ok]):
+
+            print("All data is valid. No action needed.")
+
+        else:
+
+            print("  Issues found. Agent decisions:")
+
+            for action in self.actions:
+
+                print(" -", action)
+
+
+
+# Example runs
+
+customer1 = {"email": "johnexample.com", "age": 15, "consent": "no"}
+
+customer2 = {"email": "alice@gmail.com", "age": 25, "consent": "yes"}
+
+print("=== Customer 1 ===")
+
+agent1 = CustomerDataAgent(customer1)
+
+agent1.run()
+
+print("\n=== Customer 2 ===")
+
+agent2 = CustomerDataAgent(customer2)
+
+agent2.run()
