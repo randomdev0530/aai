@@ -1,0 +1,83 @@
+import numpy as np
+
+import pandas as pd
+
+import matplotlib.pyplot as plt
+
+class SpendingCorrelationAgent:
+
+    def __init__(self, data):
+
+        self.data = pd.DataFrame(data)
+
+        self.actions = []
+
+    def calculate_correlation(self):
+
+        corr = self.data["age"].corr(self.data["spending"])
+
+        return corr
+
+    def analyze_and_act(self, corr):
+
+        if corr > 0.6:
+
+            self.actions.append("Strong positive correlation → Suggest targeting older customers with premium offers.")
+
+        elif corr < -0.6:
+
+            self.actions.append("Strong negative correlation → Suggest focusing on younger customers for high spending.")
+
+        elif -0.3 <= corr <= 0.3:
+
+            self.actions.append("Weak/no correlation → Suggest analyzing other factors like income or location.")
+
+        else:
+
+            self.actions.append("Moderate correlation → Suggest segmenting customers by age brackets.")
+
+    def run(self):
+
+        print("🤖 Agent analyzing correlation between Age and Spending...\n")
+
+        print("  Customer Data Preview:")
+
+        display(self.data)
+
+        corr = self.calculate_correlation()
+
+        print(f"\n  Calculated Correlation: {corr:.2f}\n")
+
+        self.analyze_and_act(corr)
+
+        print("  Agent Decisions:")
+
+        for action in self.actions:
+
+            print(" -", action)
+
+        corr_matrix = self.data.corr()
+
+        plt.matshow(corr_matrix, cmap="coolwarm")
+
+        plt.title("Correlation Heatmap", pad=20)
+
+        plt.colorbar()
+
+        plt.xticks(range(len(corr_matrix.columns)), corr_matrix.columns)
+
+        plt.yticks(range(len(corr_matrix.columns)), corr_matrix.columns)
+
+        plt.show()
+
+customer_data = {
+
+    "age": [22, 25, 30, 35, 40, 45, 50, 60],
+
+    "spending": [200, 220, 250, 300, 400, 450, 500, 600]
+
+}
+
+agent = SpendingCorrelationAgent(customer_data)
+
+agent.run()
